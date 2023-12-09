@@ -1,5 +1,7 @@
 package com.github.matthewdesouza.recipeapp;
 
+import atlantafx.base.theme.PrimerDark;
+import com.github.matthewdesouza.recipeapp.logging.LoggerConfigurator;
 import com.github.matthewdesouza.recipeapp.view.LoginController;
 import com.github.matthewdesouza.recipeapp.view.MainController;
 import javafx.application.Application;
@@ -16,6 +18,7 @@ public class RecipeApp extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/login.fxml"));
         Parent root = loader.load();
+        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
 
         LoginController loginController = loader.getController();
         loginController.setPrimaryStage(stage);
@@ -27,6 +30,7 @@ public class RecipeApp extends Application {
     }
 
     public static void main(String[] args) {
+        LoggerConfigurator.configureLogging();
         launch(args);
     }
 }

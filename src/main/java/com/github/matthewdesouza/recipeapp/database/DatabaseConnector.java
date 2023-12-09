@@ -5,9 +5,9 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 
 public class DatabaseConnector {
-    private static final String URL = "jdbc:mariadb://localhost:3306/";
-    private static final String USER = "root";
-    private static final String PASSWORD = "mariadb";
+//    private static final String URL = "jdbc:mariadb://localhost:3306/";
+//    private static final String USER = "root";
+//    private static final String PASSWORD = "mariadb";
 
     private Connection connection;
 

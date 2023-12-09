@@ -209,7 +209,7 @@ public class MainController {
         Optional<ButtonType> result = confirmationAlert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES) {
             // User confirmed the deletion
-            if (selectedRecipe.getUserId() == currentUser.getId() || "admin".equals(currentUser.getUsername())) {
+            if (selectedRecipe.getUserId() == currentUser.getId() || currentUser.getUsername().equals("admin")) {
                 // Authorized to delete the recipe
                 int success = RecipeDAO.deleteRecipe(selectedRecipe.getId());
                 if (success == 1) {

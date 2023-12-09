@@ -4,8 +4,10 @@ module com.github.matthewdesouza.recipeapp {
     requires java.sql;
     requires mariadb.java.client;
     requires jbcrypt;
-            
-    requires com.dlsc.formsfx;
+
+    requires org.slf4j;
+    requires logback.classic;
+    requires atlantafx.base;
                         
     opens com.github.matthewdesouza.recipeapp to javafx.fxml;
     opens com.github.matthewdesouza.recipeapp.view to javafx.fxml;
