@@ -8,7 +8,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.matthewdesouza.recipeapp.view.RecipeController">
     <children>
-        <Text layoutX="258.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Recipe Function" />
+        <Text layoutX="258.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Recipe" />
         <TextField fx:id="titleField" layoutX="226.0" layoutY="88.0" prefHeight="25.0" prefWidth="360.0" />
         <Text layoutX="44.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Recipe Title" />
         <Text layoutX="38.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Recipe Image" />

@@ -1,15 +1,20 @@
 package com.github.matthewdesouza.recipeapp.database;
 
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
 public class DatabaseConnector {
-//    private static final String URL = "jdbc:mariadb://localhost:3306/";
-//    private static final String USER = "root";
-//    private static final String PASSWORD = "mariadb";
+    private static final String URL = "jdbc:mariadb://localhost:3306/";
+    private static final String USER = "root";
+    private static final String PASSWORD = "mariadb";
+
 
     private Connection connection;
+
+    private static final Logger log = LoggerFactory.getLogger(DatabaseConnector.class);
 
     private DatabaseConnector() {
         try {
@@ -19,11 +24,13 @@ public class DatabaseConnector {
             statement.execute("""
                     CREATE DATABASE IF NOT EXISTS recipe;
                     """);
+            log.info("Recipe schema created.");
 
             // Make schema active.
             statement.execute("""
                     USE recipe;
                     """);
+            log.info("Use created schema.");
 
             // Create users table.
             statement.execute("""
@@ -33,6 +40,7 @@ public class DatabaseConnector {
                         password VARCHAR(255) NOT NULL
                     );
                     """);
+            log.info("`users` table created.");
 
             // Create recipes table.
             statement.execute("""
@@ -45,6 +53,7 @@ public class DatabaseConnector {
                         FOREIGN KEY (userId) REFERENCES users(id)
                     );
                     """);
+            log.info("`recipes` table created.");
 
             // Create join table for recipes users have liked.
             statement.execute("""
@@ -56,12 +65,14 @@ public class DatabaseConnector {
                         FOREIGN KEY (recipeId) REFERENCES recipes(id)
                     );
                     """);
+            log.info("`user_likes` table created, currently unused.");
+
             // Create admin account with default password `testing`
             statement.execute("""
 INSERT INTO users VALUES (0, "admin", "%s");
 """.formatted(BCrypt.hashpw("testing123", BCrypt.gensalt())));
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info("Database schema already initialized, using preexisting schema.");
         }
     }
 

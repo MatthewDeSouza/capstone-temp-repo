@@ -5,16 +5,21 @@ import com.github.matthewdesouza.recipeapp.database.RecipeDAO;
 import com.github.matthewdesouza.recipeapp.database.UserDAO;
 import com.github.matthewdesouza.recipeapp.model.Recipe;
 import com.github.matthewdesouza.recipeapp.model.User;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -45,6 +50,7 @@ public class MainController {
     public void initialize() {
         loadRecipes();
         setupTableViewSelection();
+        setupGlobalKeyListeners();
     }
 
     public void refreshRecipes() {
@@ -120,7 +126,8 @@ public class MainController {
 
     private void createTabForRecipe(Recipe recipe) {
         Tab tab = new Tab(recipe.getTitle());
-        VBox contentBox = new VBox();
+        VBox contentBox = new VBox(10);
+        contentBox.setPadding(new Insets(10, 10, 10, 10));
 
         ImageView imageView = new ImageView();
         try {
@@ -128,28 +135,32 @@ public class MainController {
         } catch (IllegalArgumentException e) {
             imageView.setImage(new Image(Objects.requireNonNull(RecipeApp.class.getResource("img/image-not-found.jpg")).toExternalForm()));
         }
+
         imageView.setFitHeight(180);
         imageView.setFitWidth(560);
         imageView.setPreserveRatio(true);
         HBox imageBox = new HBox(imageView);
-        imageBox.setAlignment(javafx.geometry.Pos.CENTER);
+        imageBox.setAlignment(Pos.CENTER);
 
         TextArea textArea = new TextArea(recipe.getContent());
         textArea.setEditable(false);
+        textArea.setWrapText(true);
         ScrollPane scrollPane = new ScrollPane(textArea);
+        scrollPane.setFitToWidth(true);
         HBox textBox = new HBox(scrollPane);
-        textBox.setAlignment(javafx.geometry.Pos.CENTER);
+        textBox.setAlignment(Pos.CENTER);
 
         contentBox.getChildren().addAll(imageBox, textBox);
+        AnchorPane contentPane = new AnchorPane(contentBox);
         AnchorPane.setTopAnchor(contentBox, 0.0);
         AnchorPane.setRightAnchor(contentBox, 0.0);
         AnchorPane.setBottomAnchor(contentBox, 0.0);
         AnchorPane.setLeftAnchor(contentBox, 0.0);
 
-        AnchorPane contentPane = new AnchorPane(contentBox);
         tab.setContent(contentPane);
         recipeTabPane.getTabs().add(tab);
     }
+
 
     public void handleCreateRecipe() {
         openRecipeEditor(null);
@@ -181,6 +192,30 @@ public class MainController {
             // Show an alert if no recipe is selected
             showAlert("No Selection", "Please select a recipe to edit.");
         }
+    }
+
+    private void setupGlobalKeyListeners() {
+        // Add a listener to the scene property of the recipeTabPane
+        recipeTabPane.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            // Check if the new scene is not null
+            if (newValue != null) {
+                newValue.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                    if (event.getCode() == KeyCode.W && event.isControlDown()) {
+                        closeCurrentTab();
+                        event.consume();
+                    } else if (event.getCode() == KeyCode.Q && event.isControlDown()) {
+                        Platform.exit();
+                        event.consume();
+                    } else if (event.getCode() == KeyCode.N && event.isControlDown()) {
+                        handleCreateRecipe();
+                        event.consume();
+                    } else if (event.getCode() == KeyCode.E && event.isControlDown()) {
+                        handleEditRecipe();
+                        event.consume();
+                    }
+                });
+            }
+        });
     }
 
     public void editProgram() {
